@@ -44,3 +44,37 @@ CREATE TABLE IF NOT EXISTS companies (
   INDEX idx_estado (estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ── 3. TABLA: drivers ──────────────────────────────────────
+CREATE TABLE IF NOT EXISTS drivers (
+  id                         INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  user_id                    INT UNSIGNED NULL UNIQUE,
+  company_id                 INT UNSIGNED NULL,
+  nombre_completo            VARCHAR(150) NOT NULL,
+  dni                        CHAR(8) UNIQUE NOT NULL CHECK (dni REGEXP '^[0-9]{8}$'), -- Solo 8 números
+  telefono                   CHAR(9) NOT NULL CHECK (telefono REGEXP '^[0-9]{9}$'),   -- Solo 9 números
+  numero_licencia            VARCHAR(15) UNIQUE NOT NULL, 
+  fecha_vencimiento_licencia DATE NOT NULL,
+  estado                     ENUM('activo', 'inactivo', 'suspendido') DEFAULT 'activo',
+  created_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at                 TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id)    REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT,
+  INDEX idx_dni (dni),
+  INDEX idx_company_id (company_id),
+  INDEX idx_estado (estado)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 4. TABLA: vehicles ─────────────────────────────────────
+CREATE TABLE IF NOT EXISTS vehicles (
+  id                INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  driver_id         INT UNSIGNED NULL,
+  company_id        INT UNSIGNED NULL,
+  tipo_propiedad    ENUM('empresa', 'particular') NOT NULL DEFAULT 'empresa',
+  tipo_servicio     ENUM('Moto-Taxi', 'Taxi', 'Colectivo', 'Carga', 'Especial') NULL,
+  categoria         ENUM('L5', 'M1', 'N1', 'O1', 'OTRO') NOT NULL DEFAULT 'L5',
+  placa             VARCHAR(7) UNIQUE NOT NULL CHECK (placa REGEXP '^[A-Z0-9-]{6,7}$'), -- Evita basura en la placa
+  marca             VARCHAR(50) NOT NULL,
+  modelo            VARCHAR(50) NOT NULL,
+  color             VARCHAR(30) NOT NULL,
+  ano_fabricacion   YEAR NULL,
