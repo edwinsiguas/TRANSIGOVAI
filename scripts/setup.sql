@@ -178,3 +178,65 @@ CREATE TABLE IF NOT EXISTS vehicle_images (
   file_size   INT UNSIGNED NOT NULL, -- Tamaño en bytes no puede ser negativo
   sort_order  TINYINT UNSIGNED NOT NULL DEFAULT 1,
   created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE,
+  UNIQUE KEY uq_vehicle_sort (vehicle_id, sort_order),
+  INDEX idx_vehicle_id (vehicle_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 9. TABLA: action_logs ──────────────────────────────────
+CREATE TABLE IF NOT EXISTS action_logs (
+  id          INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  user_id     INT UNSIGNED NOT NULL,
+  accion      VARCHAR(50) NOT NULL,
+  entidad     VARCHAR(50) NOT NULL,
+  entidad_id  INT UNSIGNED NULL,
+  descripcion TEXT NULL,
+  ip_address  VARCHAR(45) NULL, 
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_user_id (user_id),
+  INDEX idx_accion (accion),
+  INDEX idx_entidad (entidad),
+  INDEX idx_created_at (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 10. TABLA: rate_limits ─────────────────────────────────
+CREATE TABLE IF NOT EXISTS rate_limits (
+  id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  ip         VARCHAR(45) NOT NULL COMMENT 'IPv4 o IPv6 del cliente',
+  action     VARCHAR(100) NOT NULL COMMENT 'Identificador de la accion',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  INDEX idx_rate_ip_action_time (ip, action, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 11. TABLA: verifications ───────────────────────────────
+CREATE TABLE IF NOT EXISTS verifications (
+  id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id      INT UNSIGNED NOT NULL,
+  search_type  ENUM('placa', 'dni', 'permiso') NOT NULL,
+  search_query VARCHAR(50) NOT NULL,
+  resultado    ENUM('autorizado', 'rechazado') NOT NULL,
+  motivos      JSON NULL,
+  vehicle_data JSON NULL,
+  ip_address   VARCHAR(45) NOT NULL DEFAULT '0.0.0.0',
+  created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_ver_user_created (user_id, created_at),
+  INDEX idx_ver_resultado (resultado),
+  INDEX idx_ver_created (created_at),
+  INDEX idx_ver_search (search_type, search_query)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 12. ÍNDICES COMPUESTOS ─────────────────────────────────
+CREATE INDEX idx_users_email_role   ON users(email, role);
+CREATE INDEX idx_permits_state_date ON permits(estado, fecha_vencimiento);
+CREATE INDEX idx_drivers_company    ON drivers(company_id, estado);
+CREATE INDEX idx_vehicles_company   ON vehicles(company_id, estado);
+CREATE INDEX idx_logs_date_user     ON action_logs(created_at, user_id);
+
+-- No se crea un administrador con contraseña predeterminada.
+-- Crea el primer administrador localmente siguiendo WINDOWS_SETUP.md.
