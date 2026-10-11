@@ -78,3 +78,53 @@ CREATE TABLE IF NOT EXISTS vehicles (
   modelo            VARCHAR(50) NOT NULL,
   color             VARCHAR(30) NOT NULL,
   ano_fabricacion   YEAR NULL,
+  numero_vin        CHAR(17) UNIQUE NULL, 
+  numero_motor      VARCHAR(20) NULL,
+  combustible       ENUM('Gasolina', 'Gas', 'GLP', 'Diesel', 'Electrico', 'Hibrido', 'Otro') NULL,
+  soat_poliza       VARCHAR(15) NULL, -- Reducido a 15 (Poliza SOAT = 12 dígitos)
+  soat_aseguradora  VARCHAR(100) NULL,
+  soat_vencimiento  DATE NULL,
+  rt_entidad        VARCHAR(100) NULL,
+  rt_certificado    VARCHAR(50) NULL,
+  rt_vencimiento    DATE NULL,
+  estado            ENUM('activo', 'inactivo') DEFAULT 'activo',
+  created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (driver_id)  REFERENCES drivers(id) ON DELETE CASCADE,
+  FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE RESTRICT,
+  INDEX idx_placa (placa),
+  INDEX idx_driver_id (driver_id),
+  INDEX idx_company_id (company_id),
+  INDEX idx_estado (estado)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 5. TABLA: vehicle_assignments ─────────────────────────
+CREATE TABLE IF NOT EXISTS vehicle_assignments (
+  id                 INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  vehicle_id         INT UNSIGNED NOT NULL,
+  driver_id          INT UNSIGNED NOT NULL,
+  tipo               ENUM('propietario', 'alquiler', 'reemplazo_temporal') NOT NULL DEFAULT 'propietario',
+  propietario_nombre VARCHAR(150) NULL,
+  propietario_dni    CHAR(8) NULL CHECK (propietario_dni REGEXP '^[0-9]{8}$'),
+  fecha_inicio       DATE NOT NULL,
+  fecha_fin          DATE NULL,
+  activo             TINYINT(1) NOT NULL DEFAULT 1,
+  notas              TEXT NULL,
+  created_by         INT UNSIGNED NULL,
+  created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE,
+  FOREIGN KEY (driver_id)  REFERENCES drivers(id)  ON DELETE CASCADE,
+  FOREIGN KEY (created_by) REFERENCES users(id)    ON DELETE SET NULL,
+  UNIQUE KEY uq_active_vehicle (vehicle_id, activo),
+  INDEX idx_va_vehicle_active (vehicle_id, activo),
+  INDEX idx_va_driver (driver_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 6. TABLA: permit_sequences ─────────────────────────────
+CREATE TABLE IF NOT EXISTS permit_sequences (
+  year        YEAR NOT NULL PRIMARY KEY,
+  last_number INT UNSIGNED NOT NULL DEFAULT 0 -- INT UNSIGNED evita números negativos
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
