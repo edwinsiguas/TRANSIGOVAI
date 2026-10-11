@@ -128,3 +128,53 @@ CREATE TABLE IF NOT EXISTS permit_sequences (
   year        YEAR NOT NULL PRIMARY KEY,
   last_number INT UNSIGNED NOT NULL DEFAULT 0 -- INT UNSIGNED evita números negativos
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO permit_sequences (year, last_number)
+VALUES (YEAR(CURDATE()), 0);
+
+-- ── 7. TABLA: permits ──────────────────────────────────────
+CREATE TABLE IF NOT EXISTS permits (
+  id                INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  assignment_id     INT UNSIGNED NULL,
+  driver_id         INT UNSIGNED NULL,
+  vehicle_id        INT UNSIGNED NOT NULL,
+  company_id        INT UNSIGNED NULL,
+  tipo_permiso      ENUM('libre_transito', 'ruta_fija', 'carga', 'especial') NOT NULL DEFAULT 'libre_transito',
+  numero_permiso    VARCHAR(20) UNIQUE NOT NULL, 
+  fecha_emision     DATE NOT NULL,
+  fecha_vencimiento DATE NOT NULL,
+  qr_code           LONGTEXT NOT NULL, 
+  estado            ENUM('vigente', 'vencido', 'suspendido', 'revocado', 'renovado') DEFAULT 'vigente',
+  numero_recibo     VARCHAR(50) NULL,
+  monto_pagado      DECIMAL(10, 2) NULL,
+  observaciones     TEXT NULL,
+  created_by        INT UNSIGNED NOT NULL,
+  created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  FOREIGN KEY (assignment_id) REFERENCES vehicle_assignments(id) ON DELETE RESTRICT,
+  FOREIGN KEY (driver_id)     REFERENCES drivers(id)             ON DELETE CASCADE,
+  FOREIGN KEY (vehicle_id)    REFERENCES vehicles(id)            ON DELETE CASCADE,
+  FOREIGN KEY (company_id)    REFERENCES companies(id)           ON DELETE RESTRICT,
+  FOREIGN KEY (created_by)    REFERENCES users(id)               ON DELETE RESTRICT,
+  
+  INDEX idx_numero_permiso (numero_permiso),
+  INDEX idx_assignment_id (assignment_id),
+  INDEX idx_driver_id (driver_id),
+  INDEX idx_vehicle_id (vehicle_id),
+  INDEX idx_company_id (company_id),
+  INDEX idx_estado (estado),
+  INDEX idx_fecha_vencimiento (fecha_vencimiento),
+  INDEX idx_permits_estado_vence (estado, fecha_vencimiento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ── 8. TABLA: vehicle_images ───────────────────────────────
+CREATE TABLE IF NOT EXISTS vehicle_images (
+  id          INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  vehicle_id  INT UNSIGNED NOT NULL,
+  file_name   VARCHAR(255) NOT NULL,
+  file_path   VARCHAR(500) NOT NULL,
+  mime_type   VARCHAR(100) NOT NULL,
+  file_size   INT UNSIGNED NOT NULL, -- Tamaño en bytes no puede ser negativo
+  sort_order  TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
