@@ -1,0 +1,32 @@
+services:
+  # Base de Datos MySQL 8
+  db:
+    image: mysql:8.0
+    container_name: transigovai-db
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: marcona_permisos
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Se autoejecutan al iniciar la base de datos por primera vez:
+      - ./scripts/setup.sql:/docker-entrypoint-initdb.d/01-setup.sql:ro
+      - ./scripts/init-admin.sql:/docker-entrypoint-initdb.d/02-admin.sql:ro
+
+  # Interfaz gráfica phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: transigovai-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
