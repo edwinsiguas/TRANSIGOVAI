@@ -1,0 +1,7 @@
+{
+  "titulo": "Reporte de vehículos - MTC Marcona",
+  "registros": [
+    {"placa": "ABC-123", "tipo": "Camión", "empresa": "Transportes del Sur", "permiso": "Vigente", "activo": true},
+    {"placa": "XYZ-789", "tipo": "Bus", "empresa": "Marcona Express", "permiso": "Por vencer", "activo": true}
+  ]
+}
