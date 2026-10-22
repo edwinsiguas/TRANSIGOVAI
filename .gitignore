@@ -1,0 +1,112 @@
+# ─── v0 / Vercel sandbox ──────────────────────────────────────────────────────
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
+next.user-config.*
+
+# ─── Environment variables ────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+.env*.local
+
+# ─── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+vendor/
+
+# ─── Build output ─────────────────────────────────────────────────────────────
+dist/
+build/
+out/
+.next/
+
+# ─── Caches ───────────────────────────────────────────────────────────────────
+.cache/
+.turbo/
+.vite/
+.eslintcache
+*.tsbuildinfo
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── OS files ─────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─── Editor / IDE ─────────────────────────────────────────────────────────────
+# VSCode
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains (PHPStorm, WebStorm, etc.)
+.idea/
+*.iml
+
+# Vim / Neovim swap & backup files
+*.swp
+*.swo
+*.swn
+*~
+.*.swp
+.*.swo
+
+# Emacs
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ─── PHP / Laravel / Backend ──────────────────────────────────────────────────
+/api/vendor/
+/api/.env
+/api/storage/logs/
+/api/storage/framework/cache/
+/api/storage/framework/sessions/
+/api/storage/framework/views/
+
+# ─── Uploads (user-generated content, no subir a Git) ────────────────────────
+api/uploads/
+public/uploads/
+
+# ─── Database backups ─────────────────────────────────────────────────────────
+*.sql.gz
+*.dump
+*.bak
+
+# ─── Runtime / temp ───────────────────────────────────────────────────────────
+tmp/
+temp/
+*.pid
+*.seed
+*.pid.lock
+.lock-wscript
+
+# ─── Pruebas de carga / seguridad (no commitear resultados) ──────────────────
+reports/
+artillery-report*.json
+k6-results/
+locust-results/
+
+# ─── Misceláneo ───────────────────────────────────────────────────────────────
+pnpm-lock.yaml
+# ─── Scripts Temporales / Sensibles ──────────────────────────────────────────
+api_root.htaccess
+config_nuevo.php
+test_*.php
+*.bak
+*.old

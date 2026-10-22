@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Permitir Headers de Authorization (Crucial para JWT)
+  RewriteCond %{HTTP:Authorization} ^(.*)
+  RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+  # 2. Desactivar trailing slash para evitar redirecciones 301 (que rompen el CORS POST/OPTIONS)
+  DirectorySlash Off
+
+  # 3. Forzar requests OPTIONS al index.php (para que config.php envíe los CORS headers)
+  RewriteCond %{REQUEST_METHOD} OPTIONS
+  RewriteRule ^(.*)$ index.php [L,QSA]
+
+  # 4. Si el archivo existe físicamente (ej. /auth/login.php), servirlo directamente
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^(.*)$ - [L]
+
+  # 5. Si no existe físicamente, mandarlo al Front Controller (index.php)
+  RewriteRule ^(.*)$ index.php [L,QSA]
+</IfModule>

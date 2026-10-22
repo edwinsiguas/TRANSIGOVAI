@@ -1,0 +1,26 @@
+# ═══════════════════════════════════════════════════════════════════
+# CORS — Apache siempre envía estas cabeceras en TODAS las respuestas
+# incluyendo 301 redirects y errores, antes de que PHP corra.
+# ═══════════════════════════════════════════════════════════════════
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Auth-Token"
+    Header always set Access-Control-Max-Age "86400"
+    Header always set Vary "Origin"
+</IfModule>
+
+# Evitar que Apache agregue trailing slash a rutas (causaba 301 sin CORS)
+Options -Indexes
+DirectorySlash Off
+
+# ═══════════════════════════════════════════════════════════════════
+# Manejar el pre-flight OPTIONS directamente sin pasar a PHP
+# ═══════════════════════════════════════════════════════════════════
+RewriteEngine On
+
+# ═══════════════════════════════════════════════════════════════════
+# Router: todas las peticiones que no sean archivos reales
+# van al index.php para que el router PHP los maneje
+# ═══════════════════════════════════════════════════════════════════
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php [QSA,L]
