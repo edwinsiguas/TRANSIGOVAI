@@ -15,4 +15,4 @@ Las rutas migradas conservan los contratos usados por la interfaz y el formato d
 
 PHP conserva permisos, exportaciones y la creación/actualización de vehículos e imágenes. No cambies el esquema de la base de datos. La medición actual supera el 50 % del backend por líneas fuente; no equivale al 50 % del repositorio completo. El detalle y el método de conteo están en `../javaagregados.md`.
 
-Consulta `INSTRUCCIONES_WINDOWS.md` para configurar, ejecutar y probar el servicio. Corre en el puerto 8081 por defecto.
+Consulta `INSTRUCCIONES_WINDOWS.md` para configurar, ejecutar y probar el servicio. Corre en el puerto 8081 por defecto. SOY EDWIN 
