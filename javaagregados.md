@@ -6,13 +6,13 @@ El backend supera el objetivo de **50 % de Java** con el criterio de conteo de l
 
 | Lenguaje de backend | Líneas no vacías | Proporción |
 |---|---:|---:|
-| Java de producción (`java-service/src/main/java`) | 2 583 | **51,58 %** |
-| PHP de producción (`api/` y `server.php`) | 2 425 | 48,42 % |
-| **Total contado** | **5 008** | **100 %** |
+| Java de producción (`java-service/src/main/java`) | 2 583 | **50,79 %** |
+| PHP de producción (`api/` y `server.php`) | 2 503 | 49,21 % |
+| **Total contado** | **5 086** | **100 %** |
 
-**Fórmula:** `2 583 / (2 583 + 2 425) × 100 = 51,58 %`.
+**Fórmula:** `2 583 / (2 583 + 2 503) × 100 = 50,79 %`.
 
-El conteo incluye líneas de comentarios, excluye líneas en blanco, pruebas Java, dependencias, diagnósticos sueltos y artefactos generados. Considera Java de producción, el código PHP de `api/` (sin almacenamiento/logs) y el router de desarrollo `server.php`; no representa el porcentaje de Java de todo el repositorio, que también contiene una interfaz React/TypeScript. El resultado puede variar si cambia el alcance o método de conteo.
+El conteo incluye líneas de comentarios, excluye líneas en blanco, pruebas Java, dependencias y artefactos generados. Considera Java de producción, el código PHP de `api/` (sin almacenamiento/logs) y el router de desarrollo `server.php`; no representa el porcentaje de Java de todo el repositorio, que también contiene una interfaz React/TypeScript. En el gráfico de lenguajes de GitHub, Java representa aproximadamente el **18,4 % del repositorio** porque ese gráfico usa el tamaño del código clasificado por lenguaje, no la proporción Java/PHP del backend. Consulta `revision.md` para el análisis detallado y la distinción entre ambos indicadores.
 
 ## Módulos trasladados a Java
 
