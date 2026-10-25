@@ -330,12 +330,14 @@ export function UsersPage() {
 
         <Card className="rounded-2xl border-none shadow-sm p-6">
           <div className="flex justify-between items-start mb-4">
-            <p className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Sesiones Abiertas</p>
+            <p className="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider">Usuarios Activos</p>
             <Activity className="w-5 h-5 text-emerald-500 opacity-80" />
           </div>
           <div>
-            <h3 className="text-4xl font-extrabold text-[#0A2342] leading-none mb-2">5</h3>
-            <span className="text-[11px] font-bold text-slate-500">Sistema estable</span>
+            <h3 className="text-4xl font-extrabold text-[#0A2342] leading-none mb-2">
+              {users.filter((u) => u.estado === 'activo').length}
+            </h3>
+            <span className="text-[11px] font-bold text-slate-500">Habilitados en el sistema</span>
           </div>
         </Card>
 
