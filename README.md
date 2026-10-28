@@ -23,9 +23,7 @@ El repositorio cuenta con documentación completa y estructurada:
 ## ⚡ Inicio Rápido (3 Pasos con Docker)
 
 ### 1. Iniciar Base de Datos y phpMyAdmin
-```bash
-docker compose up -d
-```
+
 *(Crea automáticamente la base de datos `marcona_permisos`, todas las tablas y el usuario administrador).*
 - **phpMyAdmin disponible en:** [http://localhost:8080](http://localhost:8080)
 
