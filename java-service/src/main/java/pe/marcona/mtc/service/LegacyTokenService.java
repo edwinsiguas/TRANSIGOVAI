@@ -29,14 +29,14 @@ public class LegacyTokenService {
 
     public LegacyTokenService(
             ObjectMapper objectMapper,
-            @Value("${app.jwt-secret}") String secret,
-            @Value("${app.jwt-expiry-seconds:86400}") long expirySeconds,
+            @Value("${app.-secret}") String secret,
+            @Value("${app.-expiry-seconds:86400}") long expirySeconds,
             @Value("${app.environment:development}") String environment) {
         if (secret.isBlank() || ("dev_only_change_me".equals(secret) && "production".equalsIgnoreCase(environment))) {
-            throw new IllegalStateException("Configure JWT_SECRET antes de iniciar Java en producción.");
+            throw new IllegalStateException("Configure _SECRET antes de iniciar Java en producción.");
         }
         if (expirySeconds < 1) {
-            throw new IllegalArgumentException("JWT_EXPIRY debe ser mayor que cero.");
+            throw new IllegalArgumentException("_EXPIRY debe ser mayor que cero.");
         }
         this.objectMapper = objectMapper;
         this.secret = secret.getBytes(StandardCharsets.UTF_8);
@@ -45,7 +45,7 @@ public class LegacyTokenService {
 
     public String generate(long userId, String role) {
         try {
-            String header = encode(Map.of("alg", "HS256", "typ", "JWT"));
+            String header = encode(Map.of("alg", "HS256", "typ", ""));
             var claims = new LinkedHashMap<String, Object>();
             claims.put("user_id", userId);
             claims.put("role", role);
